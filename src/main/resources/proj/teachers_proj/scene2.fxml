@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane alignment="center" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.12" fx:controller="proj.teachers_proj.Scene2Controller">
+    <Button fx:id="buttonToScene1" onAction="#switchToScene1" prefHeight="57.0" prefWidth="176.0" text="Powrót do sceny 1" />
+</StackPane>
