@@ -1,10 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.AnchorPane?>
 
-<VBox alignment="center" prefHeight="214.0" prefWidth="300.0" spacing="10" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.12" fx:controller="proj.teachers_proj.Scene1Controller">
-    <Button fx:id="buttonToScene2" onAction="#switchToScene2" text="Przejdź do sceny 2" />
-   <Label fx:id="welcomeText" />
-   <Button mnemonicParsing="false" onAction="#onHelloButtonClick" text="Button" />
-</VBox>
+<AnchorPane fx:id="scene1Root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="proj.teachers_proj.Scene1Controller">
+   <children>
+      <TableView fx:id="groupTable" prefHeight="540.0" prefWidth="900.0">
+        <columns>
+          <TableColumn fx:id="groupName" prefWidth="104.0" text="Nazwa grupy" />
+          <TableColumn fx:id="groupMax" prefWidth="121.0" text="Pojemność grupy" />
+            <TableColumn fx:id="groupPercent" prefWidth="157.0" text="Procent zapełnienia grupy" />
+        </columns>
+      </TableView>
+      <ToolBar layoutY="560.0" prefHeight="40.0" prefWidth="900.0">
+        <items>
+          <Button fx:id="addButton" mnemonicParsing="false" onAction="#handleAddButtonAction" text="Dodaj grupę" />
+            <TextField fx:id="addGroupName" />
+            <TextField fx:id="addGroupMax" />
+        </items>
+      </ToolBar>
+      <Label layoutX="135.0" layoutY="552.0" text="Nazwa grupy" />
+      <Label layoutX="278.0" layoutY="552.0" text="Pojemność grupy" />
+   </children>
+</AnchorPane>

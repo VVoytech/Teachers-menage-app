@@ -1,35 +1,83 @@
 package proj.teachers_proj;
 
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.scene.control.Alert;
+
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class ClassTeacher {
-    String groupName;
+    private SimpleStringProperty groupName;
     ArrayList<Teacher> teacherArrayList = new ArrayList<>();
-    int maxTeacher;
+    private SimpleIntegerProperty maxTeacher;
 
     public ClassTeacher(String groupName, int maxTeacher) {
-        this.groupName = groupName;
-        ArrayList<Teacher> teacherArrayList = new ArrayList<>();
-        this.maxTeacher = maxTeacher;
+        this.groupName = new SimpleStringProperty(groupName);
+        this.teacherArrayList = new ArrayList<>();
+        this.maxTeacher = new SimpleIntegerProperty(maxTeacher);
     }
 
+    public int getMaxTeacher() {
+        return maxTeacher.get();
+    }
+
+    public String getName() {
+        return groupName.get();
+    }
+
+    public SimpleStringProperty nameProperty() {
+        return groupName;
+    }
+
+    public SimpleIntegerProperty maxTeachersProperty() {
+        return maxTeacher;
+    }
+
+    public void setName(String name) {
+        this.groupName = new SimpleStringProperty(name);
+    }
+
+    public void setMaxTeacher(int maxTeacher) {
+        this.maxTeacher = new SimpleIntegerProperty(maxTeacher);
+    }
+
+
     public void addTeacher(Teacher teacher) {
-        boolean p = true;
+        boolean n = true;
+        boolean m = true;
         if(!teacherArrayList.isEmpty()){
             for(int i = 0; i < teacherArrayList.size(); i++)
             {
-                if(teacherArrayList.get(i).compareTo(teacher) == 0 && teacherArrayList.get(i).COMPARE_BY_NAME == teacher || maxTeacher > teacherArrayList.size()) {
-                    p = false;
+                if(teacherArrayList.get(i).name.equals(teacher.name) && teacherArrayList.get(i).surname.equals(teacher.surname)) {
+                    n = false;
+                }
+                if(getMaxTeacher() <= teacherArrayList.size()) {
+                    m = false;
                 }
             }
         }
-        if(p){
+        if(n && m){
             teacherArrayList.add(teacher);
         }
-        else{
-            System.out.println("Nauczyciel nie zostal dodany");
+        else if(!n){
+            System.out.println("W tej grupie jest już ten nauczyciel!");
+            showAlert("Błąd", "W tej grupie jest już ten nauczyciel!");
         }
+        else if(!m){
+            System.out.println("Grupa pełna!");
+            showAlert("Błąd", "Grupa pełna!");
+        }
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     public void addSalary(Teacher teacher, double salary) {
@@ -89,5 +137,11 @@ public class ClassTeacher {
 
     public void max(){
         Collections.max(teacherArrayList, Teacher.COMPARE_BY_SALARY).print();
+    }
+
+    public SimpleDoubleProperty percent()
+    {
+        double a = teacherArrayList.size();
+        return new SimpleDoubleProperty(a / maxTeacher.get() * 100);
     }
 }

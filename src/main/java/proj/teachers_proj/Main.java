@@ -2,34 +2,29 @@ package proj.teachers_proj;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
-
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 
 public class Main extends Application {
-    private static Stage primaryStage;
 
     @Override
-    public void start(Stage stage) throws Exception {
-        primaryStage = stage;
+    public void start(Stage stage) {
+        try {
 
-        // Ładowanie pierwszej sceny
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("scene1.fxml"));
-        Scene scene1 = new Scene(loader.load());
+            Parent root = FXMLLoader.load(getClass().getResource("scene1.fxml"));
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            scene.getRoot().setId("scene1Root");
+            stage.setTitle("Grupy Nauczycieli");
+            stage.show();
 
-        primaryStage.setTitle("Przykład dwóch scen");
-        primaryStage.setScene(scene1);
-        primaryStage.show();
-    }
-
-    public static void changeScene(String fxmlFile) throws Exception {
-        // Metoda pomocnicza do zmiany sceny
-        FXMLLoader loader = new FXMLLoader(Main.class.getResource(fxmlFile));
-        Scene newScene = new Scene(loader.load());
-        primaryStage.setScene(newScene);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {
-        launch();
+        launch(args);
     }
 }
