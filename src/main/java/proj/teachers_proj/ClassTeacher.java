@@ -92,15 +92,17 @@ public class ClassTeacher {
         teacher.teacherCondition = condition;
     }
 
-    public void search(String surname){
+    public ClassTeacher search(String surname){
+        ClassTeacher temp = new ClassTeacher(getName(), getMaxTeacher());
         for(Teacher teacher : teacherArrayList){
             if(teacher.compareTo(new Teacher("", surname, TeacherCondition.NIEOBECNY, 0, 0)) == 0){
                 System.out.println("Znaleziono nauczyciela o nastepujacych danych:");
                 teacher.print();
-                return;
+                temp.addTeacher(teacher);
             }
         }
-        System.out.println("Nie ma nauczyciela o takim nazwisku");
+        if(temp.teacherArrayList.size() == 0) showAlert("Błąd", "Brak nauczyciela o podanym nazwisku!");
+        return temp;
     }
 
     public void searchPartial(String str){

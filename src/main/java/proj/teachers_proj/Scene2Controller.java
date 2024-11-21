@@ -7,7 +7,6 @@ import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.*;
@@ -28,9 +27,6 @@ public class Scene2Controller implements Initializable {
     private String name;
 
     @FXML
-    private Button addButton;
-
-    @FXML
     private ChoiceBox<TeacherCondition> addTeacherCondition;
 
     @FXML
@@ -44,6 +40,9 @@ public class Scene2Controller implements Initializable {
 
     @FXML
     private TextField addTeacherYear;
+
+    @FXML
+    private TextField searchTeacherSurname;
 
     @FXML
     private AnchorPane scene2Root;
@@ -71,35 +70,22 @@ public class Scene2Controller implements Initializable {
     ClassContainer classContainer = ClassContainer.getInstance();
 
     public void setTeacherData(ClassTeacher classTeacher) {
-        // Wyczyszczenie obecnej listy
         teacherList.clear();
 
-        // Dodanie nauczycieli z klasy do listy
         if (classTeacher != null) {
-            teacherList.addAll(classTeacher.teacherArrayList); // Zakładam, że masz metodę getTeachers()
+            teacherList.addAll(classTeacher.teacherArrayList);
             this.name = classTeacher.getName();
         }
 
-        // Przypisanie listy do tabeli
         teacherTable.setItems(teacherList);
     }
 
     public void switchToScene1() throws IOException {
-        // Znajdź aktualny stage
-        /*stage = (event != null) ? (Stage) ((Node) event.getSource()).getScene().getWindow() :
-                (Stage) Stage.getWindows().filtered(Window::isShowing).get(0);*/
-
         stage = (Stage) scene2Root.getScene().getWindow();
 
-        // Wczytaj plik FXML dla sceny 1
         FXMLLoader loader = new FXMLLoader(getClass().getResource("scene1.fxml"));
         Parent root = loader.load();
 
-        // Opcjonalnie, jeśli musisz przekazać dane do Scene1Controller
-        //Scene1Controller controller = loader.getController();
-        // Możesz wywołać metody kontrolera, np. controller.initializeData(dane);
-
-        // Stwórz scenę i dodaj filtr na ESCAPE
         Scene scene = new Scene(root);
         scene.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
             if (e.getCode() == KeyCode.ESCAPE) {
@@ -163,7 +149,26 @@ public class Scene2Controller implements Initializable {
         }
     }
 
-    // Metoda do wyświetlania komunikatów o błędach
+    @FXML
+    private void handleSearchButtonAction(ActionEvent event) {
+
+        String searchSurname = searchTeacherSurname.getText();
+
+        if (searchSurname.isEmpty()) {
+            showAlert("Błąd", "Proszę wpisać nazwisko nauczyciela do wyszukiwania!");
+            return;
+        }
+
+        ClassTeacher filteredTeachers = classContainer.groups.get(name).search(searchSurname);
+
+        if (filteredTeachers != null && !filteredTeachers.teacherArrayList.isEmpty()) {
+            teacherList.setAll(filteredTeachers.teacherArrayList);
+            teacherTable.setItems(teacherList);
+        } else {
+            showAlert("Brak wyników", "Nie znaleziono nauczycieli o nazwisku: " + searchSurname);
+        }
+    }
+
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
@@ -193,6 +198,17 @@ public class Scene2Controller implements Initializable {
                 }
             }
         });
+
+        searchTeacherSurname.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.isEmpty()) {
+                ClassTeacher classTeacher = classContainer.groups.get(name);
+                if (classTeacher != null) {
+                    teacherList.setAll(classTeacher.teacherArrayList);
+                    teacherTable.setItems(teacherList);
+                }
+            }
+        });
+
         configureContextMenu();
     }
 

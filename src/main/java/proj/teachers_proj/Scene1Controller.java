@@ -11,10 +11,8 @@ import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.*;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.stage.*;
-import javafx.scene.input.KeyEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
@@ -60,7 +58,6 @@ public class Scene1Controller implements Initializable {
             scene2Controller.setTeacherData(selectedTeacher);
         }
 
-        // Pobranie obecnego okna na podstawie zdarzenia
         Stage stage;
         if (event.getSource() instanceof Node) {
             stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -79,36 +76,28 @@ public class Scene1Controller implements Initializable {
         String groupNameText = addGroupName.getText();
         String groupMaxText = addGroupMax.getText();
 
-        // Walidacja danych wejściowych
         if (groupNameText.isEmpty() || groupMaxText.isEmpty()) {
             showAlert("Błąd", "Wszystkie pola muszą być wypełnione!");
             return;
         }
 
         try {
-            // Przekształcanie tekstu na liczbę
             int maxTeachers = Integer.parseInt(groupMaxText);
 
-            // Tworzenie nowego obiektu ClassTeacher
             ClassTeacher newGroup = new ClassTeacher(groupNameText, maxTeachers);
 
-            // Dodanie nowego obiektu do classContainer
             classContainer.addClass(groupNameText, maxTeachers);
 
-            // Odświeżenie tabeli
             ObservableList<ClassTeacher> data = FXCollections.observableArrayList(classContainer.getClassTeacherList());
             groupTable.setItems(data);
 
-            // Czyszczenie pól tekstowych po dodaniu
             addGroupName.clear();
             addGroupMax.clear();
         } catch (NumberFormatException e) {
-            // Obsługa błędu, jeśli użytkownik wpisał niepoprawną liczbę w "groupMax"
             showAlert("Błąd", "Maksymalna liczba nauczycieli musi być liczbą całkowitą!");
         }
     }
 
-    // Metoda do wyświetlania komunikatów o błędach
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
@@ -120,24 +109,19 @@ public class Scene1Controller implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        // Konfiguracja kolumn tabeli
         groupName.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         groupMax.setCellValueFactory(cellData -> cellData.getValue().maxTeachersProperty().asObject());
         groupPercent.setCellValueFactory(cellData -> cellData.getValue().percent().asObject());
 
-        // Dodanie przykładowych danych
-
-        // Przekształcenie danych na ObservableList
         ObservableList<ClassTeacher> data = FXCollections.observableArrayList(classContainer.getClassTeacherList());
         groupTable.setItems(data);
 
-        // Dodanie zdarzenia dla kliknięcia w wiersz tabeli
         groupTable.setOnMouseClicked(event -> {
-            if (event.getClickCount() == 2) { // Podwójne kliknięcie
+            if (event.getClickCount() == 2) {
                 ClassTeacher selectedTeacher = groupTable.getSelectionModel().getSelectedItem();
                 if (selectedTeacher != null) {
                     try {
-                        switchToScene2(event, selectedTeacher); // Przekazanie MouseEvent
+                        switchToScene2(event, selectedTeacher);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -152,7 +136,6 @@ public class Scene1Controller implements Initializable {
             TableRow<ClassTeacher> row = new TableRow<>();
             ContextMenu contextMenu = new ContextMenu();
 
-            // Opcja usunięcia grupy
             MenuItem deleteItem = new MenuItem("Usuń grupę");
             deleteItem.setOnAction(event -> {
                 ClassTeacher selectedTeacherClass = row.getItem();
@@ -165,7 +148,6 @@ public class Scene1Controller implements Initializable {
                 }
             });
 
-            // Opcja edycji grupy
             MenuItem editItem = new MenuItem("Edytuj grupę");
             editItem.setOnAction(event -> {
                 ClassTeacher selectedTeacherClass = row.getItem();
@@ -174,17 +156,14 @@ public class Scene1Controller implements Initializable {
                 }
             });
 
-            // Dodanie opcji do menu
             contextMenu.getItems().addAll(deleteItem, editItem);
 
-            // Pokazanie menu kontekstowego na wierszu
             row.setOnContextMenuRequested(event -> {
                 if (!row.isEmpty()) {
                     contextMenu.show(row, event.getScreenX(), event.getScreenY());
                 }
             });
 
-            // Ukrycie menu, jeśli kliknięto poza nim
             row.setOnMousePressed(event -> {
                 if (event.getButton() == MouseButton.PRIMARY) {
                     contextMenu.hide();
@@ -196,21 +175,17 @@ public class Scene1Controller implements Initializable {
     }
 
     private void showEditDialog(ClassTeacher teacherClass) {
-        // Tworzenie okna dialogowego do edycji nauczyciela
         Dialog<ClassTeacher> dialog = new Dialog<>();
         dialog.setTitle("Edytuj nauczyciela");
 
-        // Tworzenie pól do edycji
         TextField groupNameField = new TextField(teacherClass.getName());
         TextField groupMaxField = new TextField(Integer.toString(teacherClass.getMaxTeacher()));
 
-        // Layout dialogu
         VBox layout = new VBox(10);
         layout.getChildren().addAll(new Label("Nazwa grupy:"),groupNameField, new Label("Pojemność grupy:"), groupMaxField);
 
         dialog.getDialogPane().setContent(layout);
 
-        // Przyciski dialogu
         ButtonType saveButtonType = new ButtonType("Zapisz", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);
 
@@ -219,7 +194,6 @@ public class Scene1Controller implements Initializable {
                 teacherClass.setName(groupNameField.getText());
                 teacherClass.setMaxTeacher(Integer.parseInt(groupMaxField.getText()));
 
-                // Odśwież dane w tabeli
                 ObservableList<ClassTeacher> updatedData = FXCollections.observableArrayList(classContainer.getClassTeacherList());
                 groupTable.setItems(updatedData);
                 groupTable.refresh();
@@ -230,7 +204,7 @@ public class Scene1Controller implements Initializable {
         });
 
         dialog.showAndWait();
-        refreshGroupTable(); // Odśwież tabelę po edycji
+        refreshGroupTable();
     }
 
     private void refreshGroupTable() {

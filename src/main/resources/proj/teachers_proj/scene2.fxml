@@ -6,34 +6,41 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="scene2Root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="proj.teachers_proj.Scene2Controller">
+<AnchorPane fx:id="scene2Root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="proj.teachers_proj.Scene2Controller">
    <children>
-      <TableView fx:id="teacherTable" prefHeight="540.0" prefWidth="900.0">
+      <TableView fx:id="teacherTable" prefHeight="600.0" prefWidth="500.0">
         <columns>
-          <TableColumn fx:id="teacherName" prefWidth="75.0" text="Imię" />
-          <TableColumn fx:id="teacherSurname" prefWidth="75.0" text="Nazwisko" />
-            <TableColumn fx:id="teacherCondition" prefWidth="75.0" text="Status" />
-            <TableColumn fx:id="teacherBirthYear" prefWidth="75.0" text="Rok urodzenia" />
-            <TableColumn fx:id="teacherSalary" prefWidth="75.0" text="Wypłata" />
+          <TableColumn fx:id="teacherName" prefWidth="100.0" text="Imię" />
+          <TableColumn fx:id="teacherSurname" prefWidth="100.0" text="Nazwisko" />
+            <TableColumn fx:id="teacherCondition" prefWidth="100.0" text="Status" />
+            <TableColumn fx:id="teacherBirthYear" prefWidth="100.0" text="Rok urodzenia" />
+            <TableColumn fx:id="teacherSalary" prefWidth="100.0" text="Wypłata" />
         </columns>
       </TableView>
-      <ToolBar layoutY="560.0" prefHeight="40.0" prefWidth="900.0">
-        <items>
-          <Button fx:id="addButton" mnemonicParsing="false" onAction="#handleAddButtonAction" text="Button" />
+      <VBox alignment="TOP_CENTER" layoutX="500.0" prefHeight="327.0" prefWidth="200.0">
+         <children>
+            <Label text="Imię" />
             <TextField fx:id="addTeacherName" />
+            <Label alignment="BOTTOM_CENTER" prefHeight="33.0" prefWidth="51.0" text="Nazwisko" />
             <TextField fx:id="addTeacherSurname" />
+            <Label alignment="BOTTOM_CENTER" prefHeight="35.0" prefWidth="33.0" text="Status" />
             <ChoiceBox fx:id="addTeacherCondition" prefWidth="150.0" />
+            <Label alignment="BOTTOM_CENTER" prefHeight="46.0" prefWidth="77.0" text="Rok urodzenia" />
             <TextField fx:id="addTeacherYear" />
+            <Label alignment="BOTTOM_CENTER" prefHeight="41.0" prefWidth="44.0" text="Wypłata" />
             <TextField fx:id="addTeacherSalary" />
-        </items>
-      </ToolBar>
-      <Label layoutX="122.0" layoutY="552.0" text="Imię" />
-      <Label layoutX="266.0" layoutY="552.0" text="Nazwisko" />
-      <Label layoutX="429.0" layoutY="552.0" text="Status" />
-      <Label layoutX="560.0" layoutY="552.0" text="Rok urodzenia" />
-      <Label layoutX="726.0" layoutY="552.0" text="Wypłata" />
+          <Button fx:id="addButton" mnemonicParsing="false" onAction="#handleAddButtonAction" text="Dodaj" />
+         </children>
+      </VBox>
+      <VBox alignment="TOP_CENTER" layoutX="500.0" layoutY="480.0" prefHeight="120.0" prefWidth="200.0">
+         <children>
+            <Label text="Nazwisko nauczyciela do wyszukania" />
+            <TextField fx:id="searchTeacherSurname" onAction="#handleSearchButtonAction" />
+            <Button mnemonicParsing="false" onAction="#handleSearchButtonAction" text="Wyszukaj" />
+         </children>
+      </VBox>
    </children>
 </AnchorPane>

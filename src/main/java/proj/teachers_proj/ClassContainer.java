@@ -14,10 +14,8 @@ public class ClassContainer {
     private ClassContainer() {
     }
 
-    // Publiczna statyczna metoda do pobierania instancji klasy
     public static ClassContainer getInstance() {
         if (instance == null) {
-            // Tworzymy nową instancję tylko jeśli jeszcze nie istnieje
             instance = new ClassContainer();
             Teacher t1 = new Teacher("Jan", "Kowalski", TeacherCondition.OBECNY, 1980, 3500);
             instance.addClass("Klasa 1", 5);
