@@ -66,7 +66,7 @@ public class ClassTeacher {
             System.out.println("W tej grupie jest już ten nauczyciel!");
             showAlert("Błąd", "W tej grupie jest już ten nauczyciel!");
         }
-        else if(!m){
+        else{
             System.out.println("Grupa pełna!");
             showAlert("Błąd", "Grupa pełna!");
         }
