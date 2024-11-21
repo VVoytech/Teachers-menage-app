@@ -2,7 +2,6 @@ package proj.teachers_proj;
 
 import javafx.beans.property.*;
 
-import java.util.Comparator;
 
 public class Teacher implements Comparable<Teacher> {
     String name;
@@ -64,15 +63,4 @@ public class Teacher implements Comparable<Teacher> {
         return this.surname.compareToIgnoreCase(other.surname);
     }
 
-    public static final Comparator<Teacher> COMPARE_BY_NAME = (t1, t2) -> {
-        return t1.name.compareToIgnoreCase(t2.name);
-    };
-    public static final Comparator<Teacher> COMPARE_BY_SURNAME = (t1, t2) ->{
-        return t1.surname.compareToIgnoreCase(t2.surname);
-    };
-    public static final Comparator<Teacher> COMPARE_BY_BIRTH_YEAR = Comparator.comparingInt(teacher -> teacher.birthYear);
-    public static final Comparator<Teacher> COMPARE_BY_SALARY = Comparator.comparingDouble(teacher -> teacher.salary);
-    public static final Comparator<Teacher> COMPARE_BY_SALARY_DESCENDING = (t1, t2) -> {
-        return Double.compare(t2.salary, t1.salary);
-    };
 }

@@ -22,8 +22,6 @@ import javafx.scene.layout.*;
 public class Scene2Controller implements Initializable {
 
     private Stage stage;
-    private Scene scene;
-    private Parent root;
     private String name;
 
     @FXML
@@ -65,7 +63,7 @@ public class Scene2Controller implements Initializable {
     @FXML
     private TableColumn<Teacher, Integer> teacherBirthYear;
 
-    private ObservableList<Teacher> teacherList = FXCollections.observableArrayList();
+    private final ObservableList<Teacher> teacherList = FXCollections.observableArrayList();
 
     ClassContainer classContainer = ClassContainer.getInstance();
 
@@ -114,37 +112,31 @@ public class Scene2Controller implements Initializable {
         }
 
         try {
-            // Pobranie wartości z ChoiceBox
-            TeacherCondition teacherCondition = addTeacherCondition.getValue(); // Wybrana wartość z ChoiceBox
+            TeacherCondition teacherCondition = addTeacherCondition.getValue();
 
-            // Sprawdzenie, czy użytkownik wybrał opcję w ChoiceBox
             if (teacherCondition == null) {
                 showAlert("Błąd", "Proszę wybrać status nauczyciela!");
                 return;
             }
 
-            // Przekształcanie tekstów na odpowiednie typy
             double teacherSalary = Double.parseDouble(teacherSalaryText);
             int teacherYear = Integer.parseInt(teacherYearText);
 
-            // Tworzenie nowego obiektu Teacher
             Teacher newTeacher = new Teacher(teacherNameText, teacherSurnameText, teacherCondition, teacherYear, teacherSalary);
 
             classContainer.groups.get(name).addTeacher(newTeacher);
 
             ClassTeacher classTeacher = classContainer.groups.get(name);
-            teacherList.setAll(classTeacher.teacherArrayList); // Aktualizacja danych w ObservableList
+            teacherList.setAll(classTeacher.teacherArrayList);
             teacherTable.setItems(teacherList);
 
-            // Czyszczenie pól tekstowych po dodaniu
             addTeacherName.clear();
             addTeacherSurname.clear();
             addTeacherSalary.clear();
             addTeacherYear.clear();
-            addTeacherCondition.getSelectionModel().clearSelection(); // Czyszczenie wyboru w ChoiceBox
+            addTeacherCondition.getSelectionModel().clearSelection();
 
         } catch (NumberFormatException e) {
-            // Obsługa błędu, jeśli użytkownik wpisał niepoprawną liczbę w "teacherSalary" lub "teacherYear"
             showAlert("Błąd", "Wszystkie pola numeryczne muszą być liczbami!");
         }
     }
@@ -217,7 +209,6 @@ public class Scene2Controller implements Initializable {
             TableRow<Teacher> row = new TableRow<>();
             ContextMenu contextMenu = new ContextMenu();
 
-            // Opcja usunięcia nauczyciela
             MenuItem deleteItem = new MenuItem("Usuń nauczyciela");
             deleteItem.setOnAction(event -> {
                 Teacher selectedTeacher = row.getItem();
@@ -228,7 +219,6 @@ public class Scene2Controller implements Initializable {
                 }
             });
 
-            // Opcja edycji nauczyciela
             MenuItem editItem = new MenuItem("Edytuj nauczyciela");
             editItem.setOnAction(event -> {
                 Teacher selectedTeacher = row.getItem();
@@ -237,17 +227,14 @@ public class Scene2Controller implements Initializable {
                 }
             });
 
-            // Dodanie opcji do menu
             contextMenu.getItems().addAll(deleteItem, editItem);
 
-            // Pokazanie menu kontekstowego na wierszu
             row.setOnContextMenuRequested(event -> {
                 if (!row.isEmpty()) {
                     contextMenu.show(row, event.getScreenX(), event.getScreenY());
                 }
             });
 
-            // Ukrycie menu, jeśli kliknięto poza nim
             row.setOnMousePressed(event -> {
                 if (event.getButton() == MouseButton.PRIMARY) {
                     contextMenu.hide();

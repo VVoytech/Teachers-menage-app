@@ -6,12 +6,10 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Alert;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class ClassTeacher {
     private SimpleStringProperty groupName;
-    ArrayList<Teacher> teacherArrayList = new ArrayList<>();
+    public ArrayList<Teacher> teacherArrayList = new ArrayList<>();
     private SimpleIntegerProperty maxTeacher;
 
     public ClassTeacher(String groupName, int maxTeacher) {
@@ -80,16 +78,8 @@ public class ClassTeacher {
         alert.showAndWait();
     }
 
-    public void addSalary(Teacher teacher, double salary) {
-        teacher.salary += salary;
-    }
-
     public void removeTeacher(Teacher teacher){
         this.teacherArrayList.remove(teacher);
-    }
-
-    public void changeCondition(Teacher teacher, TeacherCondition condition) {
-        teacher.teacherCondition = condition;
     }
 
     public ClassTeacher search(String surname){
@@ -101,7 +91,7 @@ public class ClassTeacher {
                 temp.addTeacher(teacher);
             }
         }
-        if(temp.teacherArrayList.size() == 0) showAlert("Błąd", "Brak nauczyciela o podanym nazwisku!");
+        if(temp.teacherArrayList.isEmpty()) showAlert("Błąd", "Brak nauczyciela o podanym nazwisku!");
         return temp;
     }
 
@@ -111,34 +101,6 @@ public class ClassTeacher {
                 teacher.print();
             }
         });
-    }
-
-    public int countByCondition(TeacherCondition condition){
-        int count = 0;
-        for (Teacher teacher : teacherArrayList) {
-            if (teacher.teacherCondition == condition) {
-                count++;
-            }
-        }
-        return count;
-    }
-
-    public void summary(){
-        this.teacherArrayList.forEach(teacher -> teacher.print());
-    }
-
-    public ArrayList<Teacher> sortByName(){
-        this.teacherArrayList.sort((t1, t2) -> t1.name.compareTo(t2.name));
-        return this.teacherArrayList;
-    }
-
-    public ArrayList<Teacher> sortBySalary(){
-        this.teacherArrayList.sort(Teacher.COMPARE_BY_SALARY);
-        return this.teacherArrayList;
-    }
-
-    public void max(){
-        Collections.max(teacherArrayList, Teacher.COMPARE_BY_SALARY).print();
     }
 
     public SimpleDoubleProperty percent()
