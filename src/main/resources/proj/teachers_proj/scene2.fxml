@@ -9,38 +9,45 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="scene2Root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="proj.teachers_proj.Scene2Controller">
-   <children>
-      <TableView fx:id="teacherTable" prefHeight="600.0" prefWidth="500.0">
-        <columns>
-          <TableColumn fx:id="teacherName" prefWidth="100.0" text="Imię" />
-          <TableColumn fx:id="teacherSurname" prefWidth="100.0" text="Nazwisko" />
-            <TableColumn fx:id="teacherCondition" prefWidth="100.0" text="Status" />
-            <TableColumn fx:id="teacherBirthYear" prefWidth="100.0" text="Rok urodzenia" />
-            <TableColumn fx:id="teacherSalary" prefWidth="100.0" text="Wypłata" />
-        </columns>
-      </TableView>
-      <VBox alignment="TOP_CENTER" layoutX="500.0" prefHeight="327.0" prefWidth="200.0">
-         <children>
-            <Label text="Imię" />
-            <TextField fx:id="addTeacherName" />
-            <Label alignment="BOTTOM_CENTER" prefHeight="33.0" prefWidth="51.0" text="Nazwisko" />
-            <TextField fx:id="addTeacherSurname" />
-            <Label alignment="BOTTOM_CENTER" prefHeight="35.0" prefWidth="33.0" text="Status" />
-            <ChoiceBox fx:id="addTeacherCondition" prefWidth="150.0" />
-            <Label alignment="BOTTOM_CENTER" prefHeight="46.0" prefWidth="77.0" text="Rok urodzenia" />
-            <TextField fx:id="addTeacherYear" />
-            <Label alignment="BOTTOM_CENTER" prefHeight="41.0" prefWidth="44.0" text="Wypłata" />
-            <TextField fx:id="addTeacherSalary" />
-          <Button fx:id="addButton" mnemonicParsing="false" onAction="#handleAddButtonAction" text="Dodaj" />
-         </children>
-      </VBox>
-      <VBox alignment="TOP_CENTER" layoutX="500.0" layoutY="480.0" prefHeight="120.0" prefWidth="200.0">
-         <children>
-            <Label text="Nazwisko nauczyciela do wyszukania" />
-            <TextField fx:id="searchTeacherSurname" onAction="#handleSearchButtonAction" />
-            <Button mnemonicParsing="false" onAction="#handleSearchButtonAction" text="Wyszukaj" />
-         </children>
-      </VBox>
-   </children>
+<AnchorPane fx:id="scene2Root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="proj.teachers_proj.Scene2Controller" style="-fx-background-color: #f4f4f4;">
+    <children>
+        <!-- Central TableView -->
+        <TableView fx:id="teacherTable" layoutX="20.0" layoutY="20.0" prefHeight="500.0" prefWidth="460.0" style="-fx-background-color: #ffffff; -fx-border-color: #dcdcdc; -fx-border-width: 1;">
+            <columns>
+                <TableColumn fx:id="teacherName" prefWidth="90.0" text="Imię" style="-fx-alignment: CENTER;" />
+                <TableColumn fx:id="teacherSurname" prefWidth="90.0" text="Nazwisko" style="-fx-alignment: CENTER;" />
+                <TableColumn fx:id="teacherCondition" prefWidth="90.0" text="Status" style="-fx-alignment: CENTER;" />
+                <TableColumn fx:id="teacherBirthYear" prefWidth="90.0" text="Rok urodzenia" style="-fx-alignment: CENTER;" />
+                <TableColumn fx:id="teacherSalary" prefWidth="90.0" text="Wypłata" style="-fx-alignment: CENTER;" />
+            </columns>
+        </TableView>
+
+        <!-- Right-side VBox for Adding Teachers -->
+        <VBox alignment="TOP_CENTER" layoutX="500.0" layoutY="20.0" prefHeight="380.0" prefWidth="180.0" spacing="10.0" style="-fx-background-color: #ffffff; -fx-padding: 10; -fx-border-color: #dcdcdc;">
+            <children>
+                <Label text="Dodaj nauczyciela" style="-fx-font-weight: bold; -fx-text-fill: #333333;" />
+                <Label text="Imię" style="-fx-text-fill: #333333;" />
+                <TextField fx:id="addTeacherName" prefWidth="150.0" style="-fx-background-color: #ffffff; -fx-border-color: #cccccc;" />
+                <Label text="Nazwisko" style="-fx-text-fill: #333333;" />
+                <TextField fx:id="addTeacherSurname" prefWidth="150.0" style="-fx-background-color: #ffffff; -fx-border-color: #cccccc;" />
+                <Label text="Status" style="-fx-text-fill: #333333;" />
+                <ChoiceBox fx:id="addTeacherCondition" prefWidth="150.0" style="-fx-background-color: #ffffff; -fx-border-color: #cccccc;" />
+                <Label text="Rok urodzenia" style="-fx-text-fill: #333333;" />
+                <TextField fx:id="addTeacherYear" prefWidth="150.0" style="-fx-background-color: #ffffff; -fx-border-color: #cccccc;" />
+                <Label text="Wypłata" style="-fx-text-fill: #333333;" />
+                <TextField fx:id="addTeacherSalary" prefWidth="150.0" style="-fx-background-color: #ffffff; -fx-border-color: #cccccc;" />
+                <Button fx:id="addButton" mnemonicParsing="false" onAction="#handleAddButtonAction" text="Dodaj" style="-fx-background-color: #4caf50; -fx-text-fill: white; -fx-font-weight: bold;" />
+            </children>
+        </VBox>
+
+        <!-- Right-side VBox for Searching Teachers -->
+        <VBox alignment="TOP_CENTER" layoutX="500.0" layoutY="420.0" prefHeight="160.0" prefWidth="180.0" spacing="10.0" style="-fx-background-color: #ffffff; -fx-padding: 10; -fx-border-color: #dcdcdc;">
+            <children>
+                <Label text="Wyszukaj nauczyciela" style="-fx-font-weight: bold; -fx-text-fill: #333333;" />
+                <Label text="Nazwisko" style="-fx-text-fill: #333333;" />
+                <TextField fx:id="searchTeacherSurname" prefWidth="150.0" style="-fx-background-color: #ffffff; -fx-border-color: #cccccc;" />
+                <Button fx:id="searchButton" mnemonicParsing="false" onAction="#handleSearchButtonAction" text="Wyszukaj" style="-fx-background-color: #2196f3; -fx-text-fill: white; -fx-font-weight: bold;" />
+            </children>
+        </VBox>
+    </children>
 </AnchorPane>
