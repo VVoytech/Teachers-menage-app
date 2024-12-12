@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
@@ -8,11 +9,12 @@
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
 <AnchorPane fx:id="scene1Root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: #f4f4f4;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="proj.teachers_proj.Scene1Controller">
     <children>
         <!-- Central TableView -->
-        <TableView fx:id="groupTable" layoutX="20.0" layoutY="20.0" prefHeight="500.0" prefWidth="960.0" style="-fx-background-color: #ffffff; -fx-border-color: #dcdcdc; -fx-border-width: 1;">
+        <TableView fx:id="groupTable" layoutX="20.0" layoutY="20.0" prefHeight="500.0" prefWidth="750.0" style="-fx-background-color: #ffffff; -fx-border-color: #dcdcdc; -fx-border-width: 1;">
             <columns>
                 <TableColumn fx:id="groupName" prefWidth="200.0" style="-fx-alignment: CENTER;" text="Nazwa grupy" />
                 <TableColumn fx:id="groupMax" prefWidth="250.0" style="-fx-alignment: CENTER;" text="Pojemność grupy" />
@@ -21,19 +23,38 @@
         </TableView>
 
         <!-- Bottom ToolBar for Adding Groups -->
-        <ToolBar layoutY="540.0" prefHeight="60.0" prefWidth="900.0" style="-fx-background-color: #eaeaea;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <ToolBar layoutY="540.0" prefHeight="60.0" prefWidth="1000.0" style="-fx-background-color: #eaeaea;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
             <items>
                 <HBox spacing="10.0">
                     <Label style="-fx-text-fill: #333333;" text="Nazwa grupy:" />
                     <TextField fx:id="addGroupName" prefWidth="150.0" style="-fx-background-color: #ffffff; -fx-border-color: #cccccc;" />
                     <Label style="-fx-text-fill: #333333;" text="Pojemność grupy:" />
                     <TextField fx:id="addGroupMax" prefWidth="150.0" style="-fx-background-color: #ffffff; -fx-border-color: #cccccc;" />
-                    <Button fx:id="addButton" mnemonicParsing="false" onAction="#handleAddButtonAction" style="-fx-background-color: #4caf50; -fx-text-fill: white; -fx-font-weight: bold;" text="Dodaj grupę" />
-                    <Label style="-fx-text-fill: #333333;" text="Pobierz plik csv" />
-                    <Button fx:id="downloadButton" mnemonicParsing="false" onAction="#handleExportToCsv" style="-fx-background-color: #4caf50; -fx-text-fill: white; -fx-font-weight: bold;" text="Pobierz" />
-                    <Label fx:id="averageRateLabel" prefHeight="17.0" prefWidth="180.0" style="-fx-text-fill: #333333;" text="Średnia ocena grupy: " />
+                    <Button fx:id="addButton" mnemonicParsing="false" onAction="#handleAddButtonAction" style="-fx-background-color: #4caf50; -fx-text-fill: white; -fx-font-weight: bold;" text="Dodaj grupę">
+                  <cursor>
+                     <Cursor fx:constant="HAND" />
+                  </cursor></Button>
                 </HBox>
+            <HBox alignment="TOP_RIGHT" prefHeight="20.0" prefWidth="389.0" spacing="10.0">
+               <children>
+                       <Label style="-fx-text-fill: #333333;" text="Pobierz plik csv" />
+                       <Button fx:id="downloadButton" mnemonicParsing="false" onAction="#handleExportToCsv" style="-fx-background-color: #4caf50; -fx-text-fill: white; -fx-font-weight: bold;" text="Pobierz">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+               </children>
+            </HBox>
             </items>
+         <cursor>
+            <Cursor fx:constant="DEFAULT" />
+         </cursor>
         </ToolBar>
+      <VBox layoutX="777.0" layoutY="50.0" prefHeight="203.0" prefWidth="196.0" spacing="20.0">
+         <children>
+                 <Label fx:id="averageRateLabel" prefHeight="17.0" prefWidth="180.0" style="-fx-text-fill: #333333;" text="Średnia ocena grupy: " />
+            <Label fx:id="rateCountLabel" style="-fx-text-fill: #333333;" text="Liczba ocen: " />
+         </children>
+      </VBox>
     </children>
 </AnchorPane>

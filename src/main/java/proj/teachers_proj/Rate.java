@@ -79,4 +79,10 @@ public class Rate {
         }
         this.comment = comment;
     }
+
+    @Override
+    public String toString() {
+        return "Ocena: " + value + " (" + comment + ") - Data: " + date;
+    }
+
 }

@@ -46,6 +46,9 @@ public class Scene1Controller implements Initializable {
     private Label averageRateLabel;
 
     @FXML
+    private Label rateCountLabel;
+
+    @FXML
     private TextField addGroupMax;
 
     @FXML
@@ -404,18 +407,30 @@ public class Scene1Controller implements Initializable {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
 
             var criteria = session.getCriteriaBuilder();
-            var query = criteria.createQuery(Double.class);
-            var root = query.from(Rate.class);
 
-            query.select(criteria.avg(root.get("value")))
-                    .where(criteria.equal(root.get("group"), selectedGroup));
+            var avgQuery = criteria.createQuery(Double.class);
+            var avgRoot = avgQuery.from(Rate.class);
 
-            Double avgRate = session.createQuery(query).getSingleResult();
+            avgQuery.select(criteria.avg(avgRoot.get("value")))
+                    .where(criteria.equal(avgRoot.get("group"), selectedGroup));
 
-            averageRateLabel.setText("Średnia ocena grupy: " + avgRate);
+            Double avgRate = session.createQuery(avgQuery).getSingleResult();
+            averageRateLabel.setText("Średnia ocena grupy: " + (avgRate != null ? avgRate : "Brak ocen"));
+
+            var countQuery = criteria.createQuery(Long.class);
+            var countRoot = countQuery.from(Rate.class);
+
+            countQuery.select(criteria.count(countRoot))
+                    .where(criteria.equal(countRoot.get("group"), selectedGroup));
+
+            Long countRate = session.createQuery(countQuery).getSingleResult();
+
+            rateCountLabel.setText("Liczba ocen: " + countRate);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 
 }
