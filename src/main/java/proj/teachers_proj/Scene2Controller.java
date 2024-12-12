@@ -2,6 +2,9 @@ package proj.teachers_proj;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
@@ -17,12 +20,14 @@ import javafx.scene.input.KeyEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import org.hibernate.Session;
 
 
 public class Scene2Controller implements Initializable {
 
     private Stage stage;
     private String name;
+    private Long classId;
 
     @FXML
     private ChoiceBox<TeacherCondition> addTeacherCondition;
@@ -71,8 +76,14 @@ public class Scene2Controller implements Initializable {
         teacherList.clear();
 
         if (classTeacher != null) {
-            teacherList.addAll(classTeacher.teacherArrayList);
-            this.name = classTeacher.getName();
+            teacherList.addAll(classTeacher.getTeacherArrayList());
+            //this.name = classTeacher.getName();
+            for (Map.Entry<String, ClassTeacher> entry : classContainer.groups.entrySet()) {
+                if (entry.getValue().equals(classTeacher)) { // Porównujemy wartości
+                    this.name = entry.getKey();
+                    this.classId = classTeacher.getId();
+                }
+            }
         }
 
         teacherTable.setItems(teacherList);
@@ -90,8 +101,8 @@ public class Scene2Controller implements Initializable {
                 System.out.println("Pressed ESCAPE on Scene 1");
             }
         });
+        loadTeachersFromDatabase();
 
-        // Ustaw scenę i wyświetl okno
         stage.setScene(scene);
         stage.setTitle("Grupy Nauczycieli");
         stage.show();
@@ -99,13 +110,11 @@ public class Scene2Controller implements Initializable {
 
     @FXML
     private void handleAddButtonAction(ActionEvent event) {
-        // Pobranie wartości z pól tekstowych
         String teacherNameText = addTeacherName.getText();
         String teacherSurnameText = addTeacherSurname.getText();
         String teacherSalaryText = addTeacherSalary.getText();
         String teacherYearText = addTeacherYear.getText();
 
-        // Walidacja danych wejściowych
         if (teacherNameText.isEmpty() || teacherSurnameText.isEmpty() || teacherSalaryText.isEmpty() || teacherYearText.isEmpty()) {
             showAlert("Błąd", "Wszystkie pola muszą być wypełnione!");
             return;
@@ -127,7 +136,7 @@ public class Scene2Controller implements Initializable {
             classContainer.groups.get(name).addTeacher(newTeacher);
 
             ClassTeacher classTeacher = classContainer.groups.get(name);
-            teacherList.setAll(classTeacher.teacherArrayList);
+            teacherList.setAll(classTeacher.getTeacherArrayList());
             teacherTable.setItems(teacherList);
 
             addTeacherName.clear();
@@ -153,8 +162,8 @@ public class Scene2Controller implements Initializable {
 
         ClassTeacher filteredTeachers = classContainer.groups.get(name).search(searchSurname);
 
-        if (filteredTeachers != null && !filteredTeachers.teacherArrayList.isEmpty()) {
-            teacherList.setAll(filteredTeachers.teacherArrayList);
+        if (filteredTeachers != null && !filteredTeachers.getTeacherArrayList().isEmpty()) {
+            teacherList.setAll(filteredTeachers.getTeacherArrayList());
             teacherTable.setItems(teacherList);
         } else {
             showAlert("Brak wyników", "Nie znaleziono nauczycieli o nazwisku: " + searchSurname);
@@ -170,6 +179,8 @@ public class Scene2Controller implements Initializable {
     }
 
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        loadTeachersFromDatabase();
+
         teacherName.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         teacherSurname.setCellValueFactory(cellData -> cellData.getValue().surnameProperty());
         teacherCondition.setCellValueFactory(cellData -> cellData.getValue().conditionProperty());
@@ -195,7 +206,7 @@ public class Scene2Controller implements Initializable {
             if (newValue.isEmpty()) {
                 ClassTeacher classTeacher = classContainer.groups.get(name);
                 if (classTeacher != null) {
-                    teacherList.setAll(classTeacher.teacherArrayList);
+                    teacherList.setAll(classTeacher.getTeacherArrayList());
                     teacherTable.setItems(teacherList);
                 }
             }
@@ -246,24 +257,20 @@ public class Scene2Controller implements Initializable {
     }
 
     private void showEditDialog(Teacher teacher) {
-        // Tworzenie okna dialogowego do edycji nauczyciela
         Dialog<Teacher> dialog = new Dialog<>();
         dialog.setTitle("Edytuj nauczyciela");
 
-        // Tworzenie pól do edycji
-        TextField nameField = new TextField(teacher.name);
-        TextField surnameField = new TextField(teacher.surname);
-        TextField salaryField = new TextField(Double.toString(teacher.salary));
-        TextField yearField = new TextField(Integer.toString(teacher.birthYear));
+        TextField nameField = new TextField(teacher.getName());
+        TextField surnameField = new TextField(teacher.getSurname());
+        TextField salaryField = new TextField(Double.toString(teacher.getSalary()));
+        TextField yearField = new TextField(Integer.toString(teacher.getBirthYear()));
 
-        // Layout dialogu
         VBox layout = new VBox(10);
         layout.getChildren().addAll(new Label("Imię:"), nameField, new Label("Nazwisko:"), surnameField,
                 new Label("Pensja:"), salaryField, new Label("Rok urodzenia:"), yearField);
 
         dialog.getDialogPane().setContent(layout);
 
-        // Przyciski dialogu
         ButtonType saveButtonType = new ButtonType("Zapisz", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);
 
@@ -273,12 +280,40 @@ public class Scene2Controller implements Initializable {
                 teacher.setSurname(surnameField.getText());
                 teacher.setSalary(Double.parseDouble(salaryField.getText()));
                 teacher.setBirthYear(Integer.parseInt(yearField.getText()));
+
+                try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+                    session.beginTransaction();
+                    session.update(teacher);
+                    session.getTransaction().commit();
+                }
+
                 return teacher;
             }
             return null;
         });
 
         dialog.showAndWait();
-        teacherTable.refresh(); // Odśwież tabelę po edycji
+        teacherTable.refresh();
     }
+
+    public void loadTeachersFromDatabase() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+
+            List<Teacher> teachersFromDb = session.createQuery("from Teacher ", Teacher.class).list();
+            List<Teacher> finalGroup = new ArrayList<>();
+
+            for (Teacher teacher : teachersFromDb) {
+                if (teacher.getClassTeacher().getId() == this.classId) {
+                    finalGroup.add(teacher);
+                }
+            }
+
+            teacherList.setAll(finalGroup);
+            teacherTable.setItems(teacherList);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

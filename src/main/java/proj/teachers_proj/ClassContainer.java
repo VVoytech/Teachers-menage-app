@@ -1,6 +1,7 @@
 package proj.teachers_proj;
 
 import javafx.scene.control.Alert;
+import org.hibernate.Session;
 
 import java.util.HashMap;
 import java.util.List;
@@ -17,10 +18,7 @@ public class ClassContainer {
     public static ClassContainer getInstance() {
         if (instance == null) {
             instance = new ClassContainer();
-            Teacher t1 = new Teacher("Jan", "Kowalski", TeacherCondition.OBECNY, 1980, 3500);
-            instance.addClass("Klasa 1", 5);
-            instance.addClass("Klasa 2", 3);
-            instance.groups.get("Klasa 1").addTeacher(t1);
+            instance.loadClassTeachersFromDatabase();
         }
         return instance;
     }
@@ -31,13 +29,44 @@ public class ClassContainer {
 
     public void addClass(String groupName, int max){
         if(!groups.containsKey(groupName)){
-            groups.put(groupName, new ClassTeacher(groupName, max));
+            ClassTeacher newGroup = new ClassTeacher(groupName, max);
+            groups.put(groupName, newGroup);
+
+            try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+                session.beginTransaction();
+                session.save(newGroup);
+                session.getTransaction().commit();
+            }
+
         }
         else{
             System.out.println("Grupa o nazwie " + groupName + " juz istnieje.");
             showAlert("Błąd", "Grupa o podanej nazwie istnieje!");
         }
     }
+
+    private void loadClassTeachersFromDatabase() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            List<ClassTeacher> teachersFromDb = session.createQuery("from ClassTeacher", ClassTeacher.class).list();
+            for (ClassTeacher group : teachersFromDb) {
+                groups.put(group.getName(), group);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void saveClassToDatabase(ClassTeacher newGroup) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            session.beginTransaction();
+            session.save(newGroup);
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert("Błąd", "Wystąpił błąd podczas zapisywania grupy do bazy danych!");
+        }
+    }
+
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
@@ -48,28 +77,21 @@ public class ClassContainer {
 
     public void removeClass(String groupName){
         if(groups.containsKey(groupName)){
+            ClassTeacher groupToRemove = groups.get(groupName);
+
+            try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+                session.beginTransaction();
+                session.delete(groupToRemove);
+                session.getTransaction().commit();
+            } catch (Exception e) {
+                e.printStackTrace();
+                showAlert("Błąd", "Wystąpił błąd podczas usuwania grupy z bazy danych!");
+            }
+
             groups.remove(groupName);
         }
         else{
             System.out.println("Grupa o nazwie " + groupName + " nie istnieje.");
-        }
-    }
-
-    public void findEmpty(){
-        System.out.println("Puste grupy:");
-        for(String groupName : groups.keySet()){
-            if(groups.get(groupName).teacherArrayList.isEmpty()){
-                System.out.println(groupName);
-            }
-        }
-    }
-
-    public void summary()
-    {
-        for(String groupName : groups.keySet()){
-            double a = groups.get(groupName).teacherArrayList.size();
-            double b = groups.get(groupName).getMaxTeacher();
-            System.out.println("Nazwa grupy: " + groups.get(groupName).getName() + "\nProcentowe zapelnienie grupy: " + (a / b) * 100 + "%");
         }
     }
 

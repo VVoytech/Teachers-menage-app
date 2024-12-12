@@ -9,17 +9,14 @@ import javafx.scene.Scene;
 public class Main extends Application {
 
     @Override
-    public void start(Stage stage){
+    public void start(Stage stage) {
         try {
-
             Parent root = FXMLLoader.load(getClass().getResource("scene1.fxml"));
             Scene scene = new Scene(root);
             stage.setScene(scene);
-            scene.getRoot().setId("scene1Root");
             stage.setTitle("Grupy Nauczycieli");
             stage.show();
-
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
