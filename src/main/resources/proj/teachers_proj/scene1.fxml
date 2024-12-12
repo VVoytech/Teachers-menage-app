@@ -31,8 +31,8 @@
                     <Button fx:id="addButton" mnemonicParsing="false" onAction="#handleAddButtonAction" style="-fx-background-color: #4caf50; -fx-text-fill: white; -fx-font-weight: bold;" text="Dodaj grupę" />
                     <Label style="-fx-text-fill: #333333;" text="Pobierz plik csv" />
                     <Button fx:id="downloadButton" mnemonicParsing="false" onAction="#handleExportToCsv" style="-fx-background-color: #4caf50; -fx-text-fill: white; -fx-font-weight: bold;" text="Pobierz" />
+                    <Label fx:id="averageRateLabel" prefHeight="17.0" prefWidth="180.0" style="-fx-text-fill: #333333;" text="Średnia ocena grupy: " />
                 </HBox>
-            <Label fx:id="averageRateLabel" prefHeight="17.0" prefWidth="173.0" text="Średnia ocena grupy: " />
             </items>
         </ToolBar>
     </children>
